@@ -42,7 +42,7 @@ class Vector3D
         return $"({X}, {Y}, {Z})";
     }
 
-    // Метод для ввода вектора пользователем
+    // Метод для ввода вектора пользователем с обработкой исключений
     public static Vector3D InputVector(string vectorName)
     {
         Console.WriteLine($"Введите координаты для {vectorName}:");
@@ -57,10 +57,23 @@ class Vector3D
     {
         while (true)
         {
-            Console.Write($"{coordinateName}: ");
-            if (double.TryParse(Console.ReadLine(), out double value))
+            try
+            {
+                Console.Write($"{coordinateName}: ");
+                string input = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(input))
+                    throw new ArgumentException("Ввод не может быть пустым!");
+
+                if (!double.TryParse(input, out double value))
+                    throw new FormatException("Ошибка: введите числовое значение!");
+
                 return value;
-            Console.WriteLine("Ошибка ввода! Введите число.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка ввода: {ex.Message} Попробуйте снова.");
+            }
         }
     }
 }
@@ -70,20 +83,27 @@ class Program
 {
     static void Main()
     {
-        Vector3D v1 = Vector3D.InputVector("вектора 1");
-        Vector3D v2 = Vector3D.InputVector("вектора 2");
+        try
+        {
+            Vector3D v1 = Vector3D.InputVector("вектора 1");
+            Vector3D v2 = Vector3D.InputVector("вектора 2");
 
-        Vector3D sum = v1 + v2;
-        Vector3D difference = v1 - v2;
-        double dotProduct = Vector3D.DotProduct(v1, v2);
-        double lengthV1 = v1.Length();
-        double lengthV2 = v2.Length();
+            Vector3D sum = v1 + v2;
+            Vector3D difference = v1 - v2;
+            double dotProduct = Vector3D.DotProduct(v1, v2);
+            double lengthV1 = v1.Length();
+            double lengthV2 = v2.Length();
 
-        Console.WriteLine($"\nРезультаты операций:");
-        Console.WriteLine($"Сложение: {sum}");
-        Console.WriteLine($"Вычитание: {difference}");
-        Console.WriteLine($"Скалярное произведение: {dotProduct}");
-        Console.WriteLine($"Длина вектора 1: {lengthV1}");
-        Console.WriteLine($"Длина вектора 2: {lengthV2}");
+            Console.WriteLine($"\nРезультаты операций:");
+            Console.WriteLine($"Сложение: {sum}");
+            Console.WriteLine($"Вычитание: {difference}");
+            Console.WriteLine($"Скалярное произведение: {dotProduct}");
+            Console.WriteLine($"Длина вектора 1: {lengthV1}");
+            Console.WriteLine($"Длина вектора 2: {lengthV2}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Произошла непредвиденная ошибка: {ex.Message}");
+        }
     }
 }
