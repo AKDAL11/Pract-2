@@ -1,23 +1,27 @@
 ﻿using System;
 
+// Класс для работы с массивами, включает методы вывода, получения суммы и обработки ошибок.
 class ArrayHandler
 {
     private int[] array;
 
+    // Конструктор, создающий массив заданного размера.
     public ArrayHandler(int size)
     {
         if (size <= 0)
-            throw new ArgumentException("Размер массива должен быть больше нуля.");
+            throw new ArgumentException("Размер массива должен быть положительным числом.");
         array = new int[size];
     }
 
+    // Конструктор, принимающий готовый массив.
     public ArrayHandler(int[] inputArray)
     {
         if (inputArray == null || inputArray.Length == 0)
-            throw new ArgumentException("Массив не может быть пустым или null.");
+            throw new ArgumentException("Массив не должен быть пустым.");
         array = inputArray;
     }
 
+    // Индексатор для доступа к элементам массива с контролем выхода за пределы.
     public int this[int index]
     {
         get
@@ -34,11 +38,13 @@ class ArrayHandler
         }
     }
 
+    // Выводит элементы массива.
     public void PrintElements()
     {
         Console.WriteLine("Элементы массива: " + string.Join(", ", array));
     }
 
+    // Возвращает сумму всех элементов массива.
     public int GetSum()
     {
         int sum = 0;
@@ -49,6 +55,7 @@ class ArrayHandler
         return sum;
     }
 
+    // Выводит элементы массива после заданного значения.
     public void PrintElementsAfterValue(int value)
     {
         int index = Array.IndexOf(array, value);
@@ -66,6 +73,7 @@ class ArrayHandler
         Console.WriteLine();
     }
 
+    // Возвращает сумму элементов после заданного значения.
     public int GetSumAfterValue(int value)
     {
         int index = Array.IndexOf(array, value);
@@ -87,48 +95,62 @@ class Program
 {
     static void Main()
     {
-        try
+        int size;
+        while (true)
         {
-            Console.Write("Введите размер массива: ");
-            int size = int.Parse(Console.ReadLine());
-            if (size <= 0)
+            try
             {
-                Console.WriteLine("Ошибка: размер массива должен быть положительным числом.");
-                return;
+                Console.Write("Введите размер массива: ");
+                size = int.Parse(Console.ReadLine());
+                if (size <= 0)
+                {
+                    Console.WriteLine("Размер массива должен быть положительным числом.");
+                    continue;
+                }
+                break;
             }
-
-            int[] numbers = new int[size];
-            Console.WriteLine("Введите элементы массива:");
-            for (int i = 0; i < size; i++)
+            catch (Exception ex)
             {
-                numbers[i] = int.Parse(Console.ReadLine());
+                Console.WriteLine("Ошибка ввода: " + ex.Message);
             }
+        }
 
-            ArrayHandler handler = new ArrayHandler(numbers);
-            handler.PrintElements();
-            Console.WriteLine("Сумма всех элементов: " + handler.GetSum());
+        int[] numbers = new int[size];
+        Console.WriteLine("Введите элементы массива:");
+        for (int i = 0; i < size; i++)
+        {
+            while (true)
+            {
+                try
+                {
+                    numbers[i] = int.Parse(Console.ReadLine());
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Ошибка ввода: " + ex.Message + ". Попробуйте снова.");
+                }
+            }
+        }
 
-            Console.Write("Введите значение: ");
-            int inputValue = int.Parse(Console.ReadLine());
-            handler.PrintElementsAfterValue(inputValue);
+        ArrayHandler handler = new ArrayHandler(numbers);
+        handler.PrintElements();
+        Console.WriteLine("Сумма всех элементов: " + handler.GetSum());
 
-            Console.WriteLine("Сумма всех элементов после {0}: {1}", inputValue, handler.GetSumAfterValue(inputValue));
-        }
-        catch (FormatException)
+        while (true)
         {
-            Console.WriteLine("Ошибка: введено некорректное число.");
-        }
-        catch (IndexOutOfRangeException ex)
-        {
-            Console.WriteLine("Ошибка: " + ex.Message);
-        }
-        catch (ArgumentException ex)
-        {
-            Console.WriteLine("Ошибка: " + ex.Message);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Произошла неожиданная ошибка: " + ex.Message);
+            try
+            {
+                Console.Write("Введите значение: ");
+                int inputValue = int.Parse(Console.ReadLine());
+                handler.PrintElementsAfterValue(inputValue);
+                Console.WriteLine("Сумма всех элементов после {0}: {1}", inputValue, handler.GetSumAfterValue(inputValue));
+                break;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка: " + ex.Message + ". Попробуйте снова.");
+            }
         }
     }
 }
