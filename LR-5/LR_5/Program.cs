@@ -17,7 +17,7 @@ class FixedStringArray
         Array.Copy(inputArray, array, inputArray.Length);
     }
 
-    // Индексатор для доступа к элементам массива
+    // Индексатор для доступа к элементам 
     public string this[int index]
     {
         get
