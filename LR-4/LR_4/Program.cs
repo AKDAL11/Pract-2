@@ -82,12 +82,14 @@ class ArrayHandler
             return 0;
         }
 
-        int sum = 0;
-        for (int i = index + 1; i < array.Length; i++)
-        {
-            sum += array[i];
-        }
-        return sum;
+        //Еще один вариант для вычесления суммы
+        //int sum = 0;
+        //for (int i = index + 1; i < array.Length; i++)
+        //{
+        //    sum += array[i];
+        //}
+       
+        return array.Skip(index + 1).Sum();
     }
 }
 
